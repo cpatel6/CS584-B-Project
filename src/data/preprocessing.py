@@ -16,6 +16,10 @@ class Preprocessor:
     def __init__(self, config: dict):
         self.config = config
         self.stop_words = set(stopwords.words('english'))
+        self.max_seq_length = (
+            self.config.get('preprocessing', {}).get('max_seq_length')
+            or self.config.get('data', {}).get('max_seq_length')
+        )
         
     def clean_text(self, text: str) -> str:
         if not isinstance(text, str):
@@ -37,6 +41,11 @@ class Preprocessor:
             
         # Clean extra whitespaces
         text = re.sub(r'\s+', ' ', text).strip()
+
+        # Optional max token length normalization for sequence models
+        if self.max_seq_length:
+            tokens = text.split()
+            text = " ".join(tokens[: int(self.max_seq_length)])
         
         return text
 
