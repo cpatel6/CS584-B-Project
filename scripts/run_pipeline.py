@@ -70,10 +70,11 @@ def run_pipeline_all_models(config, train_df, test_in_df, test_out_df):
     train_time = measure_training_time(tfidf_lr.fit, train_df['text'].tolist(), train_df['label'].tolist())
     trained_models['TFIDF_LR'] = tfidf_lr
     res1 = evaluate_domain_shift(tfidf_lr, test_in_df, test_out_df, model_name="TFIDF_LR")
-    res1.update(measure_inference_speed(tfidf_lr.predict, test_in_df['text'].tolist()))
+    inference_metrics = measure_inference_speed(tfidf_lr.predict, test_in_df['text'].tolist())
+    res1.update(inference_metrics)
     res1["training_time_sec"] = train_time
     all_shift_results.append(res1)
-    timing_results.append({"model": "TFIDF_LR", "training_time_sec": train_time, **measure_inference_speed(tfidf_lr.predict, test_in_df['text'].tolist())})
+    timing_results.append({"model": "TFIDF_LR", "training_time_sec": train_time, **inference_metrics})
     _save_model_checkpoint(tfidf_lr, "TFIDF_LR", config['paths']['models_dir'])
     
     features, coefs = tfidf_lr.get_feature_importance()
@@ -85,10 +86,11 @@ def run_pipeline_all_models(config, train_df, test_in_df, test_out_df):
     train_time = measure_training_time(ngram_svm.fit, train_df['text'].tolist(), train_df['label'].tolist())
     trained_models['NGram_SVM'] = ngram_svm
     res2 = evaluate_domain_shift(ngram_svm, test_in_df, test_out_df, model_name="NGram_SVM")
-    res2.update(measure_inference_speed(ngram_svm.predict, test_in_df['text'].tolist()))
+    inference_metrics = measure_inference_speed(ngram_svm.predict, test_in_df['text'].tolist())
+    res2.update(inference_metrics)
     res2["training_time_sec"] = train_time
     all_shift_results.append(res2)
-    timing_results.append({"model": "NGram_SVM", "training_time_sec": train_time, **measure_inference_speed(ngram_svm.predict, test_in_df['text'].tolist())})
+    timing_results.append({"model": "NGram_SVM", "training_time_sec": train_time, **inference_metrics})
     _save_model_checkpoint(ngram_svm, "NGram_SVM", config['paths']['models_dir'])
     
     # 3. GloVe + LR (Treated purely as fixed embedding source for statistical models)
@@ -97,10 +99,11 @@ def run_pipeline_all_models(config, train_df, test_in_df, test_out_df):
     train_time = measure_training_time(glove_lr.fit, train_df['text'].tolist(), train_df['label'].tolist())
     trained_models['GloVe_LR'] = glove_lr
     res3 = evaluate_domain_shift(glove_lr, test_in_df, test_out_df, model_name="GloVe_LR")
-    res3.update(measure_inference_speed(glove_lr.predict, test_in_df['text'].tolist()))
+    inference_metrics = measure_inference_speed(glove_lr.predict, test_in_df['text'].tolist())
+    res3.update(inference_metrics)
     res3["training_time_sec"] = train_time
     all_shift_results.append(res3)
-    timing_results.append({"model": "GloVe_LR", "training_time_sec": train_time, **measure_inference_speed(glove_lr.predict, test_in_df['text'].tolist())})
+    timing_results.append({"model": "GloVe_LR", "training_time_sec": train_time, **inference_metrics})
     _save_model_checkpoint(glove_lr, "GloVe_LR", config['paths']['models_dir'])
 
     # === NEURAL MODELS ===
@@ -116,10 +119,11 @@ def run_pipeline_all_models(config, train_df, test_in_df, test_out_df):
     train_time = measure_training_time(cnn_model.fit, train_df['text'].tolist(), train_df['label'].tolist())
     trained_models['CNNText_GloVe'] = cnn_model
     res4 = evaluate_domain_shift(cnn_model, test_in_df, test_out_df, model_name="CNNText_GloVe")
-    res4.update(measure_inference_speed(cnn_model.predict, test_in_df['text'].tolist()))
+    inference_metrics = measure_inference_speed(cnn_model.predict, test_in_df['text'].tolist())
+    res4.update(inference_metrics)
     res4["training_time_sec"] = train_time
     all_shift_results.append(res4)
-    timing_results.append({"model": "CNNText_GloVe", "training_time_sec": train_time, **measure_inference_speed(cnn_model.predict, test_in_df['text'].tolist())})
+    timing_results.append({"model": "CNNText_GloVe", "training_time_sec": train_time, **inference_metrics})
     _save_model_checkpoint(cnn_model, "CNNText_GloVe", config['paths']['models_dir'])
     
     # 5. BiLSTM + GloVe Embeddings
@@ -134,10 +138,11 @@ def run_pipeline_all_models(config, train_df, test_in_df, test_out_df):
     train_time = measure_training_time(bilstm_model.fit, train_df['text'].tolist(), train_df['label'].tolist())
     trained_models['BiLSTM_GloVe'] = bilstm_model
     res5 = evaluate_domain_shift(bilstm_model, test_in_df, test_out_df, model_name="BiLSTM_GloVe")
-    res5.update(measure_inference_speed(bilstm_model.predict, test_in_df['text'].tolist()))
+    inference_metrics = measure_inference_speed(bilstm_model.predict, test_in_df['text'].tolist())
+    res5.update(inference_metrics)
     res5["training_time_sec"] = train_time
     all_shift_results.append(res5)
-    timing_results.append({"model": "BiLSTM_GloVe", "training_time_sec": train_time, **measure_inference_speed(bilstm_model.predict, test_in_df['text'].tolist())})
+    timing_results.append({"model": "BiLSTM_GloVe", "training_time_sec": train_time, **inference_metrics})
     _save_model_checkpoint(bilstm_model, "BiLSTM_GloVe", config['paths']['models_dir'])
 
     # 6. DistilBERT Fine-tuned
@@ -152,10 +157,11 @@ def run_pipeline_all_models(config, train_df, test_in_df, test_out_df):
     )
     trained_models['DistilBERT'] = distilbert_model
     res6 = evaluate_domain_shift(distilbert_model, test_in_df, test_out_df, model_name="DistilBERT")
-    res6.update(measure_inference_speed(distilbert_model.predict, test_in_df['text'].tolist()))
+    inference_metrics = measure_inference_speed(distilbert_model.predict, test_in_df['text'].tolist())
+    res6.update(inference_metrics)
     res6["training_time_sec"] = train_time
     all_shift_results.append(res6)
-    timing_results.append({"model": "DistilBERT", "training_time_sec": train_time, **measure_inference_speed(distilbert_model.predict, test_in_df['text'].tolist())})
+    timing_results.append({"model": "DistilBERT", "training_time_sec": train_time, **inference_metrics})
     _save_model_checkpoint(distilbert_model, "DistilBERT", config['paths']['models_dir'])
     
     return all_shift_results, trained_models, timing_results

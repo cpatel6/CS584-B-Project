@@ -10,7 +10,7 @@ class PerturbationTesting:
         self.seed = seed
 
     def _stable_text_seed(self, text: str) -> int:
-        digest = hashlib.md5(str(text).encode("utf-8")).hexdigest()
+        digest = hashlib.sha256(str(text).encode("utf-8")).hexdigest()
         return self.seed + int(digest[:8], 16)
         
     def shuffle_word_order(self, text: str) -> str:
