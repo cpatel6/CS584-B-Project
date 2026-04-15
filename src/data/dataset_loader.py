@@ -2,6 +2,31 @@ from datasets import load_dataset
 import pandas as pd
 from typing import Tuple
 
+# Canonical HuggingFace Hub dataset name aliases.
+# HF migrated many community datasets to namespaced identifiers in 2024.
+# We try the configured name first, then the legacy/namespaced fallback.
+_DATASET_ALIASES = {
+    "amazon_polarity": ["fancyzhx/amazon_polarity", "amazon_polarity"],
+    "imdb": ["stanfordnlp/imdb", "imdb"],
+}
+
+
+def _load_dataset_with_fallback(name: str):
+    """Try loading a dataset by name, falling back to known aliases on failure."""
+    candidates = _DATASET_ALIASES.get(name, [name])
+    last_exc = None
+    for candidate in candidates:
+        try:
+            return load_dataset(candidate)
+        except Exception as exc:
+            last_exc = exc
+    raise RuntimeError(
+        f"Failed to load dataset '{name}'. "
+        "Check your internet connection or set HF_TOKEN for authenticated access. "
+        f"Last error: {last_exc}"
+    ) from last_exc
+
+
 class DatasetLoader:
     def __init__(self, config: dict):
         self.config = config
@@ -20,7 +45,7 @@ class DatasetLoader:
         Loads Phase 1: Dataset A (In-Domain: Amazon Reviews)
         Returns: Train, Validation, Test splits
         """
-        dataset = load_dataset(self.config['data']['in_domain'])
+        dataset = _load_dataset_with_fallback(self.config['data']['in_domain'])
         train_ds = dataset['train']
         test_ds = dataset['test']
         
@@ -56,7 +81,7 @@ class DatasetLoader:
         Loads Phase 1: Dataset B (Out-of-Domain: IMDb Reviews)
         Returns: Test split only
         """
-        dataset = load_dataset(self.config['data']['out_of_domain'])
+        dataset = _load_dataset_with_fallback(self.config['data']['out_of_domain'])
         test_ds = dataset['test']
         
         # Use ood_samples if available, fallback to test_samples or original len

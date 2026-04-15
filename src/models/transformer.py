@@ -5,8 +5,16 @@ class DistilBERTClassifier:
     """ Phase 5: Contextual Embeddings (Transformer) Fine-tuning """
     def __init__(self, model_name="distilbert-base-uncased", num_labels=2, device="cuda"):
         self.device = torch.device(device if torch.cuda.is_available() else "cpu")
-        self.tokenizer = AutoTokenizer.from_pretrained(model_name)
-        self.model = AutoModelForSequenceClassification.from_pretrained(model_name, num_labels=num_labels)
+        try:
+            self.tokenizer = AutoTokenizer.from_pretrained(model_name)
+            self.model = AutoModelForSequenceClassification.from_pretrained(model_name, num_labels=num_labels)
+        except (OSError, Exception) as exc:
+            raise RuntimeError(
+                f"Failed to load DistilBERT model '{model_name}'. "
+                "Ensure you have internet access and optionally set HF_TOKEN for "
+                "authenticated downloads: export HF_TOKEN=<your_token>. "
+                f"Original error: {exc}"
+            ) from exc
         self.model.to(self.device)
         
     def tokenize(self, texts, max_length=256):
