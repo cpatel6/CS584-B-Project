@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 
 
-NEGATION_PATTERNS = [r"\bnot\b", r"\bnever\b", r"\bno\b", r"n't\b"]
+NEGATION_PATTERNS = [r"\bnot\b", r"\bnever\b", r"\bno\b", r"\bn't\b"]
 SARCASM_PATTERNS = [r"\byeah right\b", r"\bas if\b", r"/s\b"]
 DOMAIN_PATTERNS = [
     r"\bshipping\b",

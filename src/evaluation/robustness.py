@@ -11,7 +11,7 @@ class PerturbationTesting:
 
     def _stable_text_seed(self, text: str) -> int:
         digest = hashlib.sha256(str(text).encode("utf-8")).hexdigest()
-        return self.seed + int(digest[:16], 16)
+        return (self.seed + int(digest[:16], 16)) % (2**32)
         
     def shuffle_word_order(self, text: str) -> str:
         random.seed(self._stable_text_seed(text))  # Deterministic perturbation

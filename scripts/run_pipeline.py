@@ -187,15 +187,19 @@ def main():
     df_shift = pd.DataFrame(domain_shift_results)
     df_shift.to_csv(os.path.join(config['paths']['results_dir'], 'domain_shift_summary.csv'), index=False)
     logger.info(f"\nFinal Comparative Domain Shift Metrics:\n{df_shift.to_string()}")
-    df_shift[["model", "training_time_sec", "inference_time_sec", "inference_samples_per_sec", "num_predictions"]].to_csv(
-        os.path.join(config['paths']['results_dir'], 'timing_summary.csv'),
-        index=False,
-    )
+    timing_cols = ["model", "training_time_sec", "inference_time_sec", "inference_samples_per_sec", "num_predictions"]
+    available_timing_cols = [c for c in timing_cols if c in df_shift.columns]
+    if available_timing_cols:
+        df_shift[available_timing_cols].to_csv(
+            os.path.join(config['paths']['results_dir'], 'timing_summary.csv'),
+            index=False,
+        )
     
     # Robustness testing across ALL models
     logger.info("--- Starting Phase 6: Robustness Testing across all models ---")
     tester = PerturbationTesting(seed=config['seed'])
     robustness_results = []
+    data_regime_results = []
     
     for name, model in models.items():
         # Error analysis on cross-domain behavior
@@ -218,12 +222,21 @@ def main():
             robustness_results.append(metrics)
 
         for regime in config['robustness']['data_regimes']:
-            scaled_df = tester.scale_data_regime(train_df, regime)
-            logger.info(f"Data-regime sample for '{name}': {regime} -> {len(scaled_df)} rows")
-            
+            scaled_df = tester.scale_data_regime(test_in_df, regime)
+            logger.info(f"Evaluating model '{name}' on data regime: {regime}")
+            preds = model.predict(scaled_df['text'].tolist())
+            metrics = compute_metrics(scaled_df['label'].tolist(), preds)
+            metrics['data_regime'] = regime
+            metrics['model'] = name
+            data_regime_results.append(metrics)
+             
     df_res = pd.DataFrame(robustness_results)
     df_res.to_csv(os.path.join(config['paths']['results_dir'], 'robustness_summary.csv'), index=False)
     plot_degradation(df_res, save_path=os.path.join(config['paths']['figures_dir'], 'robustness_degradation.png'))
+    if data_regime_results:
+        df_regime = pd.DataFrame(data_regime_results)
+        df_regime.to_csv(os.path.join(config['paths']['results_dir'], 'data_regime_summary.csv'), index=False)
+        plot_degradation(df_regime, save_path=os.path.join(config['paths']['figures_dir'], 'data_regime_degradation.png'))
     
     logger.info("Pipeline execution completed for all models!")
     logger.info("Check outputs/results/domain_shift_summary.csv and outputs/figures/robustness_degradation.png for visual comparisons.")
