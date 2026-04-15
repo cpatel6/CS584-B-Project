@@ -301,7 +301,7 @@ def plot_label_distribution(datasets, save_path=None):
 def plot_generalization_scatter(df_shift, save_path=None):
     """Scatter: in-domain vs out-of-domain accuracy & F1.
 
-    Points above the y=x diagonal generalise better than the diagonal.
+    Points above the y=x diagonal generalize better than the diagonal.
     """
     pairs = [("accuracy", "in_domain_accuracy", "out_domain_accuracy"),
              ("f1_macro", "in_domain_f1", "out_domain_f1")]
@@ -318,7 +318,7 @@ def plot_generalization_scatter(df_shift, save_path=None):
         lo = max(0.3, all_vals.min() - 0.05)
         hi = min(1.0, all_vals.max() + 0.05)
         ax.plot([lo, hi], [lo, hi], "k--", alpha=0.4,
-                label="Perfect generalisation (y=x)")
+                label="Perfect generalization (y=x)")
         colors = plt.cm.get_cmap(_PALETTE)(
             np.linspace(0, 1, len(df_shift)))
         for (_, row), c in zip(df_shift.iterrows(), colors):
@@ -329,9 +329,9 @@ def plot_generalization_scatter(df_shift, save_path=None):
         ax.set_ylim(lo, hi)
         ax.set_xlabel(f"In-Domain {label.replace('_', ' ').title()}")
         ax.set_ylabel(f"Out-of-Domain {label.replace('_', ' ').title()}")
-        ax.set_title(f"Generalisation – {label.replace('_', ' ').title()}")
+        ax.set_title(f"Generalization – {label.replace('_', ' ').title()}")
         ax.legend(fontsize=8)
-    fig.suptitle("In-Domain vs Out-of-Domain Generalisation Scatter",
+    fig.suptitle("In-Domain vs Out-of-Domain Generalization Scatter",
                  fontsize=13)
     fig.tight_layout()
     _save(fig, save_path)
