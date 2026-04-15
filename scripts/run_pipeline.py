@@ -47,7 +47,8 @@ def _save_model_checkpoint(model, model_name, models_dir):
         with open(path, "wb") as f:
             pickle.dump(model, f)
         return path
-    except Exception:
+    except Exception as exc:
+        logger.warning(f"Pickle checkpoint failed for {model_name}: {exc}")
         if hasattr(model, "model") and hasattr(model.model, "save_pretrained"):
             path = os.path.join(models_dir, model_name)
             model.model.save_pretrained(path)
@@ -60,7 +61,6 @@ def _save_model_checkpoint(model, model_name, models_dir):
 def run_pipeline_all_models(config, train_df, test_in_df, test_out_df):
     all_shift_results = []
     trained_models = {}
-    timing_results = []
     
     # === STATISTICAL MODELS ===
     
@@ -74,7 +74,6 @@ def run_pipeline_all_models(config, train_df, test_in_df, test_out_df):
     res1.update(inference_metrics)
     res1["training_time_sec"] = train_time
     all_shift_results.append(res1)
-    timing_results.append({"model": "TFIDF_LR", "training_time_sec": train_time, **inference_metrics})
     _save_model_checkpoint(tfidf_lr, "TFIDF_LR", config['paths']['models_dir'])
     
     features, coefs = tfidf_lr.get_feature_importance()
@@ -90,7 +89,6 @@ def run_pipeline_all_models(config, train_df, test_in_df, test_out_df):
     res2.update(inference_metrics)
     res2["training_time_sec"] = train_time
     all_shift_results.append(res2)
-    timing_results.append({"model": "NGram_SVM", "training_time_sec": train_time, **inference_metrics})
     _save_model_checkpoint(ngram_svm, "NGram_SVM", config['paths']['models_dir'])
     
     # 3. GloVe + LR (Treated purely as fixed embedding source for statistical models)
@@ -103,7 +101,6 @@ def run_pipeline_all_models(config, train_df, test_in_df, test_out_df):
     res3.update(inference_metrics)
     res3["training_time_sec"] = train_time
     all_shift_results.append(res3)
-    timing_results.append({"model": "GloVe_LR", "training_time_sec": train_time, **inference_metrics})
     _save_model_checkpoint(glove_lr, "GloVe_LR", config['paths']['models_dir'])
 
     # === NEURAL MODELS ===
@@ -123,7 +120,6 @@ def run_pipeline_all_models(config, train_df, test_in_df, test_out_df):
     res4.update(inference_metrics)
     res4["training_time_sec"] = train_time
     all_shift_results.append(res4)
-    timing_results.append({"model": "CNNText_GloVe", "training_time_sec": train_time, **inference_metrics})
     _save_model_checkpoint(cnn_model, "CNNText_GloVe", config['paths']['models_dir'])
     
     # 5. BiLSTM + GloVe Embeddings
@@ -142,7 +138,6 @@ def run_pipeline_all_models(config, train_df, test_in_df, test_out_df):
     res5.update(inference_metrics)
     res5["training_time_sec"] = train_time
     all_shift_results.append(res5)
-    timing_results.append({"model": "BiLSTM_GloVe", "training_time_sec": train_time, **inference_metrics})
     _save_model_checkpoint(bilstm_model, "BiLSTM_GloVe", config['paths']['models_dir'])
 
     # 6. DistilBERT Fine-tuned
@@ -161,10 +156,9 @@ def run_pipeline_all_models(config, train_df, test_in_df, test_out_df):
     res6.update(inference_metrics)
     res6["training_time_sec"] = train_time
     all_shift_results.append(res6)
-    timing_results.append({"model": "DistilBERT", "training_time_sec": train_time, **inference_metrics})
     _save_model_checkpoint(distilbert_model, "DistilBERT", config['paths']['models_dir'])
     
-    return all_shift_results, trained_models, timing_results
+    return all_shift_results, trained_models
 
 
 def main():
@@ -187,13 +181,13 @@ def main():
     test_out_df = preprocessor.process_dataframe(test_out_df)
     
     # Run pipelines for ALL Models
-    domain_shift_results, models, timing_results = run_pipeline_all_models(config, train_df, test_in_df, test_out_df)
+    domain_shift_results, models = run_pipeline_all_models(config, train_df, test_in_df, test_out_df)
     
     # Save Domain Shift summary table
     df_shift = pd.DataFrame(domain_shift_results)
     df_shift.to_csv(os.path.join(config['paths']['results_dir'], 'domain_shift_summary.csv'), index=False)
     logger.info(f"\nFinal Comparative Domain Shift Metrics:\n{df_shift.to_string()}")
-    pd.DataFrame(timing_results).to_csv(
+    df_shift[["model", "training_time_sec", "inference_time_sec", "inference_samples_per_sec", "num_predictions"]].to_csv(
         os.path.join(config['paths']['results_dir'], 'timing_summary.csv'),
         index=False,
     )

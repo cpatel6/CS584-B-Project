@@ -42,7 +42,8 @@ class Preprocessor:
         # Clean extra whitespaces
         text = re.sub(r'\s+', ' ', text).strip()
 
-        # Optional max token length normalization for sequence models
+        # Optional coarse token-length normalization (whitespace-based).
+        # Final model tokenization still happens in model-specific pipelines.
         if self.max_seq_length:
             tokens = text.split()
             text = " ".join(tokens[: int(self.max_seq_length)])
