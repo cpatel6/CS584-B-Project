@@ -6,7 +6,7 @@ import seaborn as sns
 
 
 NEGATION_PATTERNS = [r"\bnot\b", r"\bnever\b", r"\bno\b", r"\bn't\b"]
-SARCASM_PATTERNS = [r"\byeah right\b", r"\bas if\b", r"/s\b"]
+SARCASM_PATTERNS = [r"\byeah right\b", r"\bas if\b", r"\b/s\b"]
 DOMAIN_PATTERNS = [
     r"\bshipping\b",
     r"\bdelivery\b",
@@ -15,7 +15,7 @@ DOMAIN_PATTERNS = [
     r"\bfilm\b",
     r"\bepisode\b",
 ]
-TYPO_PATTERN = r"(.)\1{2,}"
+TYPO_PATTERNS = [r"(.)\1{2,}"]
 
 
 def categorize_error_text(text: str) -> str:
@@ -26,7 +26,7 @@ def categorize_error_text(text: str) -> str:
         return "sarcasm"
     if any(re.search(p, text) for p in DOMAIN_PATTERNS):
         return "domain_specific_words"
-    if re.search(TYPO_PATTERN, text):
+    if any(re.search(p, text) for p in TYPO_PATTERNS):
         return "typos"
     return "other"
 

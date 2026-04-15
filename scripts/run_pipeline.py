@@ -41,6 +41,7 @@ from src.models.distilbert import DistilBERTClassifier
 
 
 def _save_model_checkpoint(model, model_name, models_dir):
+    """Save model checkpoint with pickle first, then HF-style fallback when available."""
     os.makedirs(models_dir, exist_ok=True)
     try:
         path = os.path.join(models_dir, f"{model_name}.pkl")
@@ -236,7 +237,7 @@ def main():
     if data_regime_results:
         df_regime = pd.DataFrame(data_regime_results)
         df_regime.to_csv(os.path.join(config['paths']['results_dir'], 'data_regime_summary.csv'), index=False)
-        plot_degradation(df_regime, save_path=os.path.join(config['paths']['figures_dir'], 'data_regime_degradation.png'))
+        plot_degradation(df_regime, save_path=os.path.join(config['paths']['figures_dir'], 'data_regime_scaling.png'))
     
     logger.info("Pipeline execution completed for all models!")
     logger.info("Check outputs/results/domain_shift_summary.csv and outputs/figures/robustness_degradation.png for visual comparisons.")

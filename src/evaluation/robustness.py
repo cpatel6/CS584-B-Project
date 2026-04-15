@@ -10,6 +10,7 @@ class PerturbationTesting:
         self.seed = seed
 
     def _stable_text_seed(self, text: str) -> int:
+        """Build a deterministic per-text seed for reproducible perturbations."""
         digest = hashlib.sha256(str(text).encode("utf-8")).hexdigest()
         return (self.seed + int(digest[:16], 16)) % (2**32)
         

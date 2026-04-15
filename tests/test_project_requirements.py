@@ -41,7 +41,7 @@ class ProjectRequirementTests(unittest.TestCase):
         y_pred = [0, 1, 0]
         metrics = compute_metrics(y_true, y_pred)
         self.assertIn("f1_macro", metrics)
-        speed = measure_inference_speed(lambda x: [0 for _ in x], [1, 2, 3], repeats=2)
+        speed = measure_inference_speed(lambda inputs: [0 for _ in inputs], [1, 2, 3], repeats=2)
         self.assertGreater(speed["inference_samples_per_sec"], 0.0)
 
 

@@ -46,7 +46,7 @@ class Preprocessor:
         # Final model tokenization still happens in model-specific pipelines.
         if self.max_seq_length:
             tokens = text.split()
-            text = " ".join(tokens[: int(self.max_seq_length)])
+            text = " ".join(tokens[: self.max_seq_length])
         
         return text
 

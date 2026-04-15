@@ -29,14 +29,15 @@ def measure_inference_speed(
     if repeats < 1:
         repeats = 1
     start = time.perf_counter()
-    preds = None
+    num_predictions = 0
     # Repeat predictions to smooth out noisy one-off timing variance.
     for _ in range(repeats):
         preds = predict_fn(inputs)
+        num_predictions = len(preds)
     elapsed = max(time.perf_counter() - start, 1e-12)
     samples = len(inputs) * repeats
     return {
         "inference_time_sec": float(elapsed),
         "inference_samples_per_sec": float(samples / elapsed),
-        "num_predictions": int(len(preds) if preds is not None else 0),
+        "num_predictions": int(num_predictions),
     }
