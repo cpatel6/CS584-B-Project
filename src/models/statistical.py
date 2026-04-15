@@ -38,6 +38,12 @@ class NGramSVM:
         X_vec = self.vectorizer.transform(X)
         return self.model.predict(X_vec)
 
+    def get_feature_importance(self):
+        """Feature importance from LinearSVC coefficients."""
+        feature_names = self.vectorizer.get_feature_names_out()
+        coefs = self.model.coef_[0]
+        return feature_names, coefs
+
 class LDAModel:
     """ Phase 2: Topic Modeling (LDA) """
     def __init__(self, n_components=2, max_features=5000, random_state=42):
