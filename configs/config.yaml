@@ -7,9 +7,9 @@ data:
   text_column: "text"
   label_column: "label"
   max_seq_length: 256
-  train_samples: 12000 # 12,000 for training/validation
-  test_samples: 3000   # 3,000 for internal in-domain testing
-  ood_samples: 15000   # 15,000 for out-of-domain evaluation (IMDb)
+  train_samples: 1000  # reduced for CPU run (original: 12000)
+  test_samples: 300    # reduced for CPU run (original: 3000)
+  ood_samples: 500     # reduced for CPU run (original: 15000)
   val_split: 0.1
 
 preprocessing:
@@ -23,9 +23,9 @@ training:
   batch_size: 32
   learning_rate_nn: 1e-3
   learning_rate_tf: 2e-5
-  epochs: 5
+  epochs: 2
   early_stopping_patience: 2
-  device: "cuda"
+  device: "cpu"
 
 models:
   statistical:
