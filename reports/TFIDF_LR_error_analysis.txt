@@ -3,10 +3,6 @@ Error Analysis for TFIDF_LR
 
 False Positives (Predicted Positive, Actually Negative):
 - wasted potential great concept ruined poor execution
-- wasted potential great concept ruined poor execution
-- wasted potential great concept ruined poor execution
-- wasted potential great concept ruined poor execution would recommend
-- dull uninspired painfully slow wanted leave theater would recommend
 
 False Negatives (Predicted Negative, Actually Positive):
 - beautiful powerful movie left speechless end
@@ -17,9 +13,9 @@ False Negatives (Predicted Negative, Actually Positive):
 - one greatest films ever made completely blown away exactly described
 - superb direction powerful script movie deserves awards
 - movie touched heart genuinely emotional experience
-- movie touched heart genuinely emotional experience would buy
 - incredibly wellmade movie compelling original story
+- incredible cinematic experience story deeply moving
 
 Error Taxonomy Counts:
-- domain_specific_words: 32
-- other: 18
+- domain_specific_words: 10
+- other: 7

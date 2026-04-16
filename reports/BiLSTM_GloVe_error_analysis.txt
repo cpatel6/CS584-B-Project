@@ -2,26 +2,19 @@ Error Analysis for BiLSTM_GloVe
 ========================================
 
 False Positives (Predicted Positive, Actually Negative):
-- story boring predictable fell asleep halfway disappointing overall
-- story boring predictable fell asleep halfway
-- overcomplicated dull cgi looked outdated acting weak
-- dull uninspired painfully slow wanted leave theater disappointing overall
-- dull uninspired painfully slow wanted leave theater
-- story boring predictable fell asleep halfway
-- worth time script lazy pacing awful described
-- painfully unfunny unengaging complete disappointment throughout
-- wasted potential great concept ruined poor execution
-- actors looked bored director vision whatsoever
 
 False Negatives (Predicted Negative, Actually Positive):
-- one greatest films ever made completely blown away would buy
-- one greatest films ever made completely blown away exactly described
-- one greatest films ever made completely blown away
-- one greatest films ever made completely blown away works advertised
-- one greatest films ever made completely blown away
-- one greatest films ever made completely blown away
-- one greatest films ever made completely blown away
+- film exceeded every expectation genuine fivestar movie
+- excellent movie great pacing ending satisfying really exceeded expectations
+- exceptional storytelling breathtaking visuals loved every moment works advertised
+- great writing outstanding performances thoroughly enjoyed works advertised
+- beautiful powerful movie left speechless end really exceeded expectations
+- moving thoughtprovoking movie stay forever exactly described
+- riveting start finish best film year
+- watched three times loved time wonderful
+- film exceeded every expectation genuine fivestar movie shipping fast
+- beautiful powerful movie left speechless end
 
 Error Taxonomy Counts:
-- other: 93
-- domain_specific_words: 44
+- domain_specific_words: 53
+- other: 47

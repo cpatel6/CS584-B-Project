@@ -68,8 +68,15 @@ from src.models.bilstm import BiLSTMText
 from src.models.distilbert import DistilBERTClassifier
 
 
-def _save_model_checkpoint(model, model_name, models_dir):
-    """Save model checkpoint with pickle first, then HF-style fallback when available."""
+def _save_model_checkpoint(model, model_name, models_dir, enabled=True):
+    """Save model checkpoint with pickle first, then HF-style fallback when available.
+
+    Pass ``enabled=False`` (config key ``training.save_checkpoints: false``) to
+    skip writing any files to disk – useful when disk space is limited.
+    """
+    if not enabled:
+        logger.info(f"Skipping checkpoint for {model_name} (save_checkpoints=false)")
+        return None
     os.makedirs(models_dir, exist_ok=True)
     try:
         path = os.path.join(models_dir, f"{model_name}.pkl")
@@ -95,6 +102,10 @@ def run_pipeline_all_models(config, train_df, test_in_df, test_out_df, figs_dir)
     # Collect feature-importance data for a combined plot at the end
     _feat_importance_pairs = []
 
+    save_ckpt  = config['training'].get('save_checkpoints', True)
+    vocab_nn   = config['training'].get('vocab_size_nn', 10000)
+    models_dir = config['paths']['models_dir']
+
     # ── STATISTICAL MODELS ──────────────────────────────────────────────────
 
     logger.info("--- Training Statistical Model 1: TF-IDF + LR ---")
@@ -114,7 +125,7 @@ def run_pipeline_all_models(config, train_df, test_in_df, test_out_df, figs_dir)
     res1.update(inference_metrics)
     res1["training_time_sec"] = train_time
     all_shift_results.append(res1)
-    _save_model_checkpoint(tfidf_lr, "TFIDF_LR", config['paths']['models_dir'])
+    _save_model_checkpoint(tfidf_lr, "TFIDF_LR", models_dir, enabled=save_ckpt)
 
     features, coefs = tfidf_lr.get_feature_importance()
     _feat_importance_pairs.append(("TF-IDF + LR – Top Features", features, coefs))
@@ -136,7 +147,7 @@ def run_pipeline_all_models(config, train_df, test_in_df, test_out_df, figs_dir)
     res2.update(inference_metrics)
     res2["training_time_sec"] = train_time
     all_shift_results.append(res2)
-    _save_model_checkpoint(ngram_svm, "NGram_SVM", config['paths']['models_dir'])
+    _save_model_checkpoint(ngram_svm, "NGram_SVM", models_dir, enabled=save_ckpt)
 
     ng_features, ng_coefs = ngram_svm.get_feature_importance()
     _feat_importance_pairs.append(("N-Gram + SVM – Top Features", ng_features, ng_coefs))
@@ -156,14 +167,17 @@ def run_pipeline_all_models(config, train_df, test_in_df, test_out_df, figs_dir)
     res3.update(inference_metrics)
     res3["training_time_sec"] = train_time
     all_shift_results.append(res3)
-    _save_model_checkpoint(glove_lr, "GloVe_LR", config['paths']['models_dir'])
+    _save_model_checkpoint(glove_lr, "GloVe_LR", models_dir, enabled=save_ckpt)
 
     # ── NEURAL MODELS ───────────────────────────────────────────────────────
 
     logger.info("--- Training Neural Model 1: CNNText ---")
     cnn_model = NeuralTextClassifier(
         CNNText, glove_path=None,
+        vocab_size=vocab_nn,
+        max_seq_length=config['data']['max_seq_length'],
         epochs=config['training']['epochs'],
+        batch_size=config['training']['batch_size'],
         device=config['training']['device'])
     train_time = measure_training_time(
         cnn_model.fit,
@@ -178,12 +192,15 @@ def run_pipeline_all_models(config, train_df, test_in_df, test_out_df, figs_dir)
     res4.update(inference_metrics)
     res4["training_time_sec"] = train_time
     all_shift_results.append(res4)
-    _save_model_checkpoint(cnn_model, "CNNText_GloVe", config['paths']['models_dir'])
+    _save_model_checkpoint(cnn_model, "CNNText_GloVe", models_dir, enabled=save_ckpt)
 
     logger.info("--- Training Neural Model 2: BiLSTM ---")
     bilstm_model = NeuralTextClassifier(
         BiLSTMText, glove_path=None, hidden_size=64,
+        vocab_size=vocab_nn,
+        max_seq_length=config['data']['max_seq_length'],
         epochs=config['training']['epochs'],
+        batch_size=config['training']['batch_size'],
         device=config['training']['device'])
     train_time = measure_training_time(
         bilstm_model.fit,
@@ -198,8 +215,7 @@ def run_pipeline_all_models(config, train_df, test_in_df, test_out_df, figs_dir)
     res5.update(inference_metrics)
     res5["training_time_sec"] = train_time
     all_shift_results.append(res5)
-    _save_model_checkpoint(bilstm_model, "BiLSTM_GloVe",
-                           config['paths']['models_dir'])
+    _save_model_checkpoint(bilstm_model, "BiLSTM_GloVe", models_dir, enabled=save_ckpt)
 
     logger.info("--- Training Neural Model 3: DistilBERT ---")
     distilbert_model = DistilBERTClassifier(device=config['training']['device'])
@@ -219,8 +235,7 @@ def run_pipeline_all_models(config, train_df, test_in_df, test_out_df, figs_dir)
     res6.update(inference_metrics)
     res6["training_time_sec"] = train_time
     all_shift_results.append(res6)
-    _save_model_checkpoint(distilbert_model, "DistilBERT",
-                           config['paths']['models_dir'])
+    _save_model_checkpoint(distilbert_model, "DistilBERT", models_dir, enabled=save_ckpt)
 
     return all_shift_results, trained_models, preds_in_all, preds_out_all, \
            _feat_importance_pairs

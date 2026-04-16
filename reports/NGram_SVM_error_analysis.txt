@@ -7,22 +7,16 @@ False Positives (Predicted Positive, Actually Negative):
 - dull uninspired painfully slow wanted leave theater
 - wasted potential great concept ruined poor execution
 - actors looked bored director vision whatsoever
-- dull uninspired painfully slow wanted leave theater described
 - dull uninspired painfully slow wanted leave theater disappointing overall
 - actors looked bored director vision whatsoever
 - actors looked bored director vision whatsoever disappointing overall
+- actors looked bored director vision whatsoever
 - actors looked bored director vision whatsoever
 
 False Negatives (Predicted Negative, Actually Positive):
 - one greatest films ever made completely blown away would buy
 - one greatest films ever made completely blown away exactly described
 - one greatest films ever made completely blown away
-- one greatest films ever made completely blown away works advertised
-- one greatest films ever made completely blown away
-- one greatest films ever made completely blown away highly satisfied
-- one greatest films ever made completely blown away
-- one greatest films ever made completely blown away
 
 Error Taxonomy Counts:
-- other: 47
-- domain_specific_words: 4
+- other: 16

@@ -16,5 +16,5 @@ False Negatives (Predicted Negative, Actually Positive):
 - beautiful powerful movie left speechless end
 
 Error Taxonomy Counts:
-- domain_specific_words: 123
-- other: 116
+- domain_specific_words: 53
+- other: 47

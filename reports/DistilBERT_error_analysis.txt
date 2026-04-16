@@ -2,19 +2,30 @@ Error Analysis for DistilBERT
 ========================================
 
 False Positives (Predicted Positive, Actually Negative):
+- extremely boring poorly acted regret watching film
+- story boring predictable fell asleep halfway disappointing overall
+- special effects cheap story completely incoherent defective right away
+- story boring predictable fell asleep halfway defective right away
+- story boring predictable fell asleep halfway
+- special effects cheap story completely incoherent terrible experience
+- overcomplicated dull cgi looked outdated acting weak
+- extremely boring poorly acted regret watching film nothing worked correctly
+- dull uninspired painfully slow wanted leave theater disappointing overall
+- dull uninspired painfully slow wanted leave theater
 
 False Negatives (Predicted Negative, Actually Positive):
-- beautiful powerful movie left speechless end really exceeded expectations
-- moving thoughtprovoking movie stay forever exactly described
 - riveting start finish best film year
-- watched three times loved time wonderful
-- beautiful powerful movie left speechless end
-- beautiful powerful movie left speechless end works advertised
 - true work art cinematography soundtrack perfect great product great service
-- great writing outstanding performances thoroughly enjoyed impressed overall
-- movie touched heart genuinely emotional experience
-- great writing outstanding performances thoroughly enjoyed
+- true work art cinematography soundtrack perfect works great day one
+- riveting start finish best film year
+- movie touched heart genuinely emotional experience would buy
+- movie touched heart genuinely emotional experience happy result
+- movie touched heart genuinely emotional experience exactly described
+- incredible cinematic experience story deeply moving great product great service
+- riveting start finish best film year
+- loved characters narrative amazing viewing experience
 
 Error Taxonomy Counts:
-- other: 98
-- domain_specific_words: 92
+- other: 46
+- domain_specific_words: 24
+- negation: 5
