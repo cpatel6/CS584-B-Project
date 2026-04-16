@@ -4,8 +4,9 @@ __pycache__/
 .DS_Store
 data/raw/
 data/processed/
-outputs/
-reports/
+# outputs/  # allow generated outputs to be committed
+outputs/models/*.pkl
+# reports/  # allow generated reports to be committed
 .env
 .venv
 env/

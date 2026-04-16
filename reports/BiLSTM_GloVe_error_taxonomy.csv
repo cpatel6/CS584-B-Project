@@ -1,0 +1,138 @@
+text,true_label,pred_label,category
+story boring predictable fell asleep halfway disappointing overall,0,1,other
+story boring predictable fell asleep halfway,0,1,other
+overcomplicated dull cgi looked outdated acting weak,0,1,other
+dull uninspired painfully slow wanted leave theater disappointing overall,0,1,other
+dull uninspired painfully slow wanted leave theater,0,1,other
+story boring predictable fell asleep halfway,0,1,other
+worth time script lazy pacing awful described,0,1,other
+painfully unfunny unengaging complete disappointment throughout,0,1,other
+wasted potential great concept ruined poor execution,0,1,other
+one greatest films ever made completely blown away would buy,1,0,other
+actors looked bored director vision whatsoever,0,1,other
+painfully unfunny unengaging complete disappointment throughout,0,1,other
+cannot understand positive reviews film genuinely terrible,0,1,domain_specific_words
+terrible writing plot many holes enjoy movie,0,1,domain_specific_words
+dull uninspired painfully slow wanted leave theater described,0,1,other
+one greatest films ever made completely blown away exactly described,1,0,other
+terrible movie plot made sense acting wooden,0,1,domain_specific_words
+terrible writing plot many holes enjoy movie,0,1,domain_specific_words
+special effects cheap story completely incoherent,0,1,other
+story boring predictable fell asleep halfway,0,1,other
+dull uninspired painfully slow wanted leave theater disappointing overall,0,1,other
+actors looked bored director vision whatsoever,0,1,other
+painfully unfunny unengaging complete disappointment throughout,0,1,other
+disappointing film none characters likable,0,1,domain_specific_words
+actors looked bored director vision whatsoever disappointing overall,0,1,other
+painfully unfunny unengaging complete disappointment throughout,0,1,other
+badly made start finish editing jarring confusing poor customer support,0,1,other
+possibly worst film released decade completely unwatchable,0,1,domain_specific_words
+terrible writing plot many holes enjoy movie,0,1,domain_specific_words
+painfully unfunny unengaging complete disappointment throughout,0,1,other
+terrible writing plot many holes enjoy movie,0,1,domain_specific_words
+actors looked bored director vision whatsoever,0,1,other
+dull uninspired painfully slow wanted leave theater instructions useless,0,1,other
+painfully unfunny unengaging complete disappointment throughout,0,1,other
+actors looked bored director vision whatsoever,0,1,other
+story boring predictable fell asleep halfway,0,1,other
+story boring predictable fell asleep halfway poor value,0,1,other
+overcomplicated dull cgi looked outdated acting weak,0,1,other
+actors looked bored director vision whatsoever,0,1,other
+one greatest films ever made completely blown away,1,0,other
+painfully unfunny unengaging complete disappointment throughout,0,1,other
+possibly worst film released decade completely unwatchable,0,1,domain_specific_words
+terrible writing plot many holes enjoy movie,0,1,domain_specific_words
+badly made start finish editing jarring confusing poor customer support,0,1,other
+dull uninspired painfully slow wanted leave theater,0,1,other
+dull uninspired painfully slow wanted leave theater terrible experience,0,1,other
+special effects cheap story completely incoherent described,0,1,other
+one greatest films ever made completely blown away works advertised,1,0,other
+cannot understand positive reviews film genuinely terrible,0,1,domain_specific_words
+cannot understand positive reviews film genuinely terrible,0,1,domain_specific_words
+badly made start finish editing jarring confusing defective right away,0,1,other
+worth time script lazy pacing awful,0,1,other
+story boring predictable fell asleep halfway broke quickly,0,1,other
+terrible movie plot made sense acting wooden described,0,1,domain_specific_words
+special effects cheap story completely incoherent broke quickly,0,1,other
+disappointing film none characters likable,0,1,domain_specific_words
+overcomplicated dull cgi looked outdated acting weak,0,1,other
+dull uninspired painfully slow wanted leave theater poor value,0,1,other
+painfully unfunny unengaging complete disappointment throughout broke quickly,0,1,other
+dull uninspired painfully slow wanted leave theater poor value,0,1,other
+disappointing film none characters likable,0,1,domain_specific_words
+terrible writing plot many holes enjoy movie,0,1,domain_specific_words
+special effects cheap story completely incoherent would recommend,0,1,other
+terrible writing plot many holes enjoy movie,0,1,domain_specific_words
+cannot understand positive reviews film genuinely terrible described,0,1,domain_specific_words
+terrible movie plot made sense acting wooden,0,1,domain_specific_words
+badly made start finish editing jarring confusing poor value,0,1,other
+one greatest films ever made completely blown away,1,0,other
+terrible movie plot made sense acting wooden,0,1,domain_specific_words
+actors looked bored director vision whatsoever,0,1,other
+wasted potential great concept ruined poor execution broke quickly,0,1,other
+wasted potential great concept ruined poor execution,0,1,other
+disappointing film none characters likable,0,1,domain_specific_words
+badly made start finish editing jarring confusing terrible experience,0,1,other
+possibly worst film released decade completely unwatchable,0,1,domain_specific_words
+painfully unfunny unengaging complete disappointment throughout broke quickly,0,1,other
+cannot understand positive reviews film genuinely terrible,0,1,domain_specific_words
+one greatest films ever made completely blown away,1,0,other
+wasted potential great concept ruined poor execution,0,1,other
+wasted potential great concept ruined poor execution would recommend,0,1,other
+painfully unfunny unengaging complete disappointment throughout,0,1,other
+badly made start finish editing jarring confusing described,0,1,other
+painfully unfunny unengaging complete disappointment throughout,0,1,other
+badly made start finish editing jarring confusing,0,1,other
+worth time script lazy pacing awful described,0,1,other
+absolute disaster movie ending particularly frustrating broke quickly,0,1,domain_specific_words
+painfully unfunny unengaging complete disappointment throughout,0,1,other
+cannot understand positive reviews film genuinely terrible would recommend,0,1,domain_specific_words
+badly made start finish editing jarring confusing,0,1,other
+absolute disaster movie ending particularly frustrating poor value,0,1,domain_specific_words
+absolute disaster movie ending particularly frustrating,0,1,domain_specific_words
+badly made start finish editing jarring confusing,0,1,other
+actors looked bored director vision whatsoever,0,1,other
+overcomplicated dull cgi looked outdated acting weak disappointing overall,0,1,other
+wasted potential great concept ruined poor execution terrible experience,0,1,other
+badly made start finish editing jarring confusing broke quickly,0,1,other
+dull uninspired painfully slow wanted leave theater would recommend,0,1,other
+actors looked bored director vision whatsoever,0,1,other
+cannot understand positive reviews film genuinely terrible,0,1,domain_specific_words
+one greatest films ever made completely blown away,1,0,other
+possibly worst film released decade completely unwatchable,0,1,domain_specific_words
+actors looked bored director vision whatsoever poor value,0,1,other
+special effects cheap story completely incoherent,0,1,other
+possibly worst film released decade completely unwatchable,0,1,domain_specific_words
+story boring predictable fell asleep halfway described,0,1,other
+badly made start finish editing jarring confusing,0,1,other
+cannot understand positive reviews film genuinely terrible would recommend,0,1,domain_specific_words
+absolute disaster movie ending particularly frustrating would recommend,0,1,domain_specific_words
+story boring predictable fell asleep halfway,0,1,other
+dull uninspired painfully slow wanted leave theater,0,1,other
+cannot understand positive reviews film genuinely terrible,0,1,domain_specific_words
+possibly worst film released decade completely unwatchable,0,1,domain_specific_words
+story boring predictable fell asleep halfway,0,1,other
+actors looked bored director vision whatsoever disappointing overall,0,1,other
+story boring predictable fell asleep halfway,0,1,other
+dull uninspired painfully slow wanted leave theater,0,1,other
+actors looked bored director vision whatsoever,0,1,other
+painfully unfunny unengaging complete disappointment throughout,0,1,other
+painfully unfunny unengaging complete disappointment throughout,0,1,other
+possibly worst film released decade completely unwatchable,0,1,domain_specific_words
+absolute disaster movie ending particularly frustrating poor value,0,1,domain_specific_words
+special effects cheap story completely incoherent,0,1,other
+dull uninspired painfully slow wanted leave theater described,0,1,other
+disappointing film none characters likable would recommend,0,1,domain_specific_words
+worth time script lazy pacing awful described,0,1,other
+absolute disaster movie ending particularly frustrating disappointing overall,0,1,domain_specific_words
+actors looked bored director vision whatsoever,0,1,other
+terrible writing plot many holes enjoy movie,0,1,domain_specific_words
+badly made start finish editing jarring confusing,0,1,other
+cannot understand positive reviews film genuinely terrible described,0,1,domain_specific_words
+disappointing film none characters likable,0,1,domain_specific_words
+disappointing film none characters likable disappointing overall,0,1,domain_specific_words
+overcomplicated dull cgi looked outdated acting weak,0,1,other
+painfully unfunny unengaging complete disappointment throughout,0,1,other
+dull uninspired painfully slow wanted leave theater,0,1,other
+absolute disaster movie ending particularly frustrating,0,1,domain_specific_words
+terrible writing plot many holes enjoy movie disappointing overall,0,1,domain_specific_words

@@ -1,0 +1,20 @@
+Error Analysis for DistilBERT
+========================================
+
+False Positives (Predicted Positive, Actually Negative):
+
+False Negatives (Predicted Negative, Actually Positive):
+- beautiful powerful movie left speechless end really exceeded expectations
+- moving thoughtprovoking movie stay forever exactly described
+- riveting start finish best film year
+- watched three times loved time wonderful
+- beautiful powerful movie left speechless end
+- beautiful powerful movie left speechless end works advertised
+- true work art cinematography soundtrack perfect great product great service
+- great writing outstanding performances thoroughly enjoyed impressed overall
+- movie touched heart genuinely emotional experience
+- great writing outstanding performances thoroughly enjoyed
+
+Error Taxonomy Counts:
+- other: 98
+- domain_specific_words: 92

@@ -1,3 +1,5 @@
+import os
+
 from datasets import load_dataset
 import pandas as pd
 from typing import Tuple
@@ -10,9 +12,19 @@ _DATASET_ALIASES = {
     "imdb": ["stanfordnlp/imdb", "imdb"],
 }
 
+# Local CSV fallback paths (relative to project root).
+_LOCAL_CSV = {
+    "amazon_polarity": "data/amazon_polarity.csv",
+    "imdb": "data/imdb.csv",
+}
+
 
 def _load_dataset_with_fallback(name: str):
-    """Try loading a dataset by name, falling back to known aliases on failure."""
+    """Try loading a dataset by name, falling back to known aliases on failure.
+
+    When the HuggingFace Hub is unreachable the function checks for a local
+    CSV at a well-known path, and synthesises the data if neither is available.
+    """
     candidates = _DATASET_ALIASES.get(name, [name])
     last_exc = None
     for candidate in candidates:
@@ -20,6 +32,26 @@ def _load_dataset_with_fallback(name: str):
             return load_dataset(candidate)
         except Exception as exc:
             last_exc = exc
+
+    # --- offline fallback: local CSV -----------------------------------------
+    local_path = _LOCAL_CSV.get(name)
+    if local_path and os.path.exists(local_path):
+        df = pd.read_csv(local_path)
+        # Wrap in a dict mimicking HF dataset splits so callers work unchanged.
+        from datasets import Dataset
+        return {"train": Dataset.from_pandas(df), "test": Dataset.from_pandas(df)}
+
+    # --- offline fallback: synthesise on the fly ------------------------------
+    try:
+        from src.data.synthetic_data import save_synthetic_datasets
+        save_synthetic_datasets(data_dir="data")
+        if local_path and os.path.exists(local_path):
+            df = pd.read_csv(local_path)
+            from datasets import Dataset
+            return {"train": Dataset.from_pandas(df), "test": Dataset.from_pandas(df)}
+    except Exception:
+        pass
+
     raise RuntimeError(
         f"Failed to load dataset '{name}'. "
         "Check your internet connection or set HF_TOKEN for authenticated access. "

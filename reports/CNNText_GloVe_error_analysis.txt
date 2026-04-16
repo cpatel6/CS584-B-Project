@@ -1,0 +1,20 @@
+Error Analysis for CNNText_GloVe
+========================================
+
+False Positives (Predicted Positive, Actually Negative):
+
+False Negatives (Predicted Negative, Actually Positive):
+- beautiful powerful movie left speechless end
+- movie touched heart genuinely emotional experience
+- incredible cinematic experience story deeply moving
+- fantastic watch characters rich plot gripping
+- one greatest films ever made completely blown away would buy
+- movie touched heart genuinely emotional experience
+- fantastic watch characters rich plot gripping
+- one greatest films ever made completely blown away exactly described
+- superb direction powerful script movie deserves awards
+- movie touched heart genuinely emotional experience
+
+Error Taxonomy Counts:
+- domain_specific_words: 40
+- other: 28
