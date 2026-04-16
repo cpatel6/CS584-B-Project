@@ -460,6 +460,253 @@ def plot_precision_recall_f1(df_metrics, domain="In-Domain", save_path=None):
 
 
 # ──────────────────────────────────────────────────────────────────
+# 18. Accuracy + F1 combined (replaces two separate bar plots)
+# ──────────────────────────────────────────────────────────────────
+def plot_accuracy_f1_combined(df_shift, save_path=None):
+    """Side-by-side grouped bar charts: accuracy AND F1, in-domain vs out-of-domain."""
+    pairs = [
+        ("accuracy", "in_domain_accuracy", "out_domain_accuracy", "Accuracy"),
+        ("f1",       "in_domain_f1",       "out_domain_f1",       "Macro F1"),
+    ]
+    available = [(lbl, ic, oc, title)
+                 for lbl, ic, oc, title in pairs
+                 if ic in df_shift.columns and oc in df_shift.columns]
+    if not available:
+        return
+    fig, axes = plt.subplots(1, len(available),
+                              figsize=(12 * len(available) // 2 + 2, 6),
+                              sharey=False)
+    if len(available) == 1:
+        axes = [axes]
+    models = df_shift["model"].tolist()
+    x = np.arange(len(models))
+    width = 0.35
+    for ax, (lbl, in_col, out_col, ylabel) in zip(axes, available):
+        b1 = ax.bar(x - width / 2, df_shift[in_col],  width,
+                    label="In-Domain (Amazon)",  color="#2980b9")
+        b2 = ax.bar(x + width / 2, df_shift[out_col], width,
+                    label="Out-of-Domain (IMDb)", color="#e74c3c")
+        ax.set_xticks(x)
+        ax.set_xticklabels(models, rotation=25, ha="right", fontsize=9)
+        ax.set_ylim(0, 1.15)
+        ax.set_ylabel(ylabel)
+        ax.set_title(f"In-Domain vs Out-of-Domain {ylabel}")
+        ax.legend(fontsize=8)
+        for bar in list(b1) + list(b2):
+            ax.annotate(f"{bar.get_height():.3f}",
+                        xy=(bar.get_x() + bar.get_width() / 2,
+                            bar.get_height()),
+                        xytext=(0, 3), textcoords="offset points",
+                        ha="center", va="bottom", fontsize=7)
+    fig.suptitle("Model Comparison: Accuracy and F1 (In-Domain vs Out-of-Domain)",
+                 fontsize=13, fontweight="bold")
+    fig.tight_layout()
+    _save(fig, save_path)
+
+
+# ──────────────────────────────────────────────────────────────────
+# 19. Combined Precision / Recall / F1 for BOTH domains
+# ──────────────────────────────────────────────────────────────────
+def plot_precision_recall_f1_combined(df_shift, save_path=None):
+    """Single figure with two sub-plots: in-domain and out-of-domain P/R/F1."""
+    needed_in  = ["model", "in_domain_precision",  "in_domain_recall",  "in_domain_f1"]
+    needed_out = ["model", "out_domain_precision", "out_domain_recall", "out_domain_f1"]
+    if not all(c in df_shift.columns for c in needed_in + needed_out[1:]):
+        return
+    models = df_shift["model"].tolist()
+    x = np.arange(len(models))
+    width = 0.25
+    fig, axes = plt.subplots(1, 2, figsize=(18, 6), sharey=True)
+    domain_specs = [
+        (axes[0], "In-Domain (Amazon)",
+         df_shift["in_domain_precision"],
+         df_shift["in_domain_recall"],
+         df_shift["in_domain_f1"]),
+        (axes[1], "Out-of-Domain (IMDb)",
+         df_shift["out_domain_precision"],
+         df_shift["out_domain_recall"],
+         df_shift["out_domain_f1"]),
+    ]
+    for ax, domain, prec, rec, f1 in domain_specs:
+        ax.bar(x - width, prec, width, label="Precision", color="#3498db")
+        ax.bar(x,          rec,  width, label="Recall",    color="#2ecc71")
+        ax.bar(x + width,  f1,   width, label="F1 Macro",  color="#e74c3c")
+        ax.set_xticks(x)
+        ax.set_xticklabels(models, rotation=25, ha="right", fontsize=9)
+        ax.set_ylim(0, 1.15)
+        ax.set_ylabel("Score")
+        ax.set_title(domain)
+        ax.legend(fontsize=8)
+    fig.suptitle("Precision, Recall and F1 – In-Domain vs Out-of-Domain",
+                 fontsize=13, fontweight="bold")
+    fig.tight_layout()
+    _save(fig, save_path)
+
+
+# ──────────────────────────────────────────────────────────────────
+# 20. All confusion matrices in a single grid
+# ──────────────────────────────────────────────────────────────────
+def plot_all_confusion_matrices(y_in_true, y_out_true,
+                                 preds_in_all, preds_out_all,
+                                 save_path=None):
+    """Grid of confusion matrices: rows = models, cols = [In-Domain, Out-of-Domain]."""
+    model_names = list(preds_in_all.keys())
+    n = len(model_names)
+    if n == 0:
+        return
+    labels = ["Neg", "Pos"]
+    fig, axes = plt.subplots(n, 2,
+                              figsize=(10, 4 * n),
+                              constrained_layout=True)
+    if n == 1:
+        axes = [axes]
+    domain_data = [
+        ("In-Domain\n(Amazon)",  y_in_true,  preds_in_all),
+        ("Out-of-Domain\n(IMDb)", y_out_true, preds_out_all),
+    ]
+    for row_idx, name in enumerate(model_names):
+        for col_idx, (domain_label, y_true, preds_dict) in enumerate(domain_data):
+            ax = axes[row_idx][col_idx]
+            cm = confusion_matrix(y_true, preds_dict[name])
+            sns.heatmap(cm, annot=True, fmt="d", cmap="Blues",
+                        xticklabels=labels, yticklabels=labels,
+                        ax=ax, linewidths=0.5, cbar=False)
+            ax.set_ylabel("True" if col_idx == 0 else "")
+            ax.set_xlabel("Predicted")
+            title = name if col_idx == 0 else ""
+            subtitle = domain_label
+            ax.set_title(f"{title}\n{subtitle}" if title else subtitle,
+                         fontsize=9)
+    fig.suptitle("Confusion Matrices – All Models × Both Domains",
+                 fontsize=13, fontweight="bold", y=1.01)
+    _save(fig, save_path)
+
+
+# ──────────────────────────────────────────────────────────────────
+# 21. Feature importance for two models side-by-side
+# ──────────────────────────────────────────────────────────────────
+def plot_feature_importance_combined(feat_coef_pairs, top_n=15, save_path=None):
+    """Horizontally stacked feature importance charts.
+
+    feat_coef_pairs: list of (title_str, feature_names_array, coefs_array)
+    """
+    n = len(feat_coef_pairs)
+    if n == 0:
+        return
+    fig, axes = plt.subplots(1, n, figsize=(12 * n // 2 + 2, max(6, top_n * 0.4)))
+    if n == 1:
+        axes = [axes]
+    for ax, (title, feature_names, coefs) in zip(axes, feat_coef_pairs):
+        df = pd.DataFrame({"feature": feature_names, "coef": coefs})
+        df = df.reindex(df["coef"].abs().sort_values(ascending=False).index)
+        plot_df = pd.concat([
+            df[df["coef"] > 0].head(top_n),
+            df[df["coef"] < 0].head(top_n),
+        ])
+        colors = ["#e74c3c" if c > 0 else "#3498db" for c in plot_df["coef"]]
+        ax.barh(plot_df["feature"], plot_df["coef"], color=colors)
+        ax.axvline(0, color="black", linewidth=0.8, linestyle="--")
+        ax.set_xlabel("Coefficient")
+        ax.set_title(title, fontsize=10)
+        ax.invert_yaxis()
+    fig.suptitle("Top Feature Coefficients – Statistical Models",
+                 fontsize=13, fontweight="bold")
+    fig.tight_layout()
+    _save(fig, save_path)
+
+
+# ──────────────────────────────────────────────────────────────────
+# 22. Data-regime combined (accuracy + F1 side-by-side)
+# ──────────────────────────────────────────────────────────────────
+def plot_data_regime_combined(df_regime, save_path=None):
+    """Two-panel line plot: accuracy AND F1 vs data fraction."""
+    if df_regime is None or df_regime.empty:
+        return
+    if "data_regime" not in df_regime.columns:
+        return
+    metrics = [(c, c.replace("_", " ").title())
+               for c in ["accuracy", "f1_macro"]
+               if c in df_regime.columns]
+    if not metrics:
+        return
+    fig, axes = plt.subplots(1, len(metrics),
+                              figsize=(8 * len(metrics), 6), sharey=False)
+    if len(metrics) == 1:
+        axes = [axes]
+    for ax, (metric, ylabel) in zip(axes, metrics):
+        sns.lineplot(data=df_regime, x="data_regime", y=metric,
+                     hue="model", marker="o", ax=ax, palette=_PALETTE)
+        ax.xaxis.set_major_formatter(mticker.PercentFormatter(xmax=1.0))
+        ax.set_xlabel("Fraction of Data")
+        ax.set_ylabel(ylabel)
+        ax.set_title(f"{ylabel} vs. Data Fraction")
+        ax.legend(title="Model", bbox_to_anchor=(1.02, 1), loc="upper left",
+                  fontsize=8)
+    fig.suptitle("Data Efficiency – Performance vs. Training Data Fraction",
+                 fontsize=13, fontweight="bold")
+    fig.tight_layout()
+    _save(fig, save_path)
+
+
+# ──────────────────────────────────────────────────────────────────
+# 23. Robustness combined (noise accuracy, noise F1, shuffle bars)
+# ──────────────────────────────────────────────────────────────────
+def plot_robustness_combined(df_robustness, df_shuffle, save_path=None):
+    """Three-panel robustness figure: noise accuracy + noise F1 + word-shuffle."""
+    panels = []
+    if df_robustness is not None and not df_robustness.empty \
+            and "noise_level" in df_robustness.columns:
+        if "accuracy" in df_robustness.columns:
+            panels.append(("noise_acc", "Accuracy vs. Noise Level"))
+        if "f1_macro" in df_robustness.columns:
+            panels.append(("noise_f1", "Macro F1 vs. Noise Level"))
+    has_shuffle = (df_shuffle is not None and not df_shuffle.empty
+                   and {"model", "baseline_accuracy", "shuffled_accuracy"}.issubset(
+                       df_shuffle.columns))
+    if has_shuffle:
+        panels.append(("shuffle", "Word-Shuffle Robustness"))
+    if not panels:
+        return
+    fig, axes = plt.subplots(1, len(panels),
+                              figsize=(8 * len(panels), 6), sharey=False)
+    if len(panels) == 1:
+        axes = [axes]
+    for ax, (key, title) in zip(axes, panels):
+        if key == "noise_acc":
+            sns.lineplot(data=df_robustness, x="noise_level", y="accuracy",
+                         hue="model", marker="o", ax=ax, palette=_PALETTE)
+            ax.set_xlabel("Noise Level")
+            ax.set_ylabel("Accuracy")
+            ax.legend(title="Model", bbox_to_anchor=(1.02, 1), loc="upper left",
+                      fontsize=7)
+        elif key == "noise_f1":
+            sns.lineplot(data=df_robustness, x="noise_level", y="f1_macro",
+                         hue="model", marker="o", ax=ax, palette=_PALETTE)
+            ax.set_xlabel("Noise Level")
+            ax.set_ylabel("Macro F1")
+            ax.legend(title="Model", bbox_to_anchor=(1.02, 1), loc="upper left",
+                      fontsize=7)
+        elif key == "shuffle":
+            xs = np.arange(len(df_shuffle))
+            width = 0.35
+            ax.bar(xs - width / 2, df_shuffle["baseline_accuracy"], width,
+                   label="Baseline", color="#2980b9")
+            ax.bar(xs + width / 2, df_shuffle["shuffled_accuracy"], width,
+                   label="After shuffle", color="#e74c3c")
+            ax.set_xticks(xs)
+            ax.set_xticklabels(df_shuffle["model"], rotation=25,
+                               ha="right", fontsize=8)
+            ax.set_ylim(0, 1.15)
+            ax.set_ylabel("Accuracy")
+            ax.legend(fontsize=8)
+        ax.set_title(title, fontsize=10)
+    fig.suptitle("Robustness Analysis – Noise Injection and Word-Shuffle",
+                 fontsize=13, fontweight="bold")
+    fig.tight_layout()
+    _save(fig, save_path)
+
+
+# ──────────────────────────────────────────────────────────────────
 # 17. Summary report table as an image (for presentations)
 # ──────────────────────────────────────────────────────────────────
 def plot_results_table(df, title="Model Comparison Summary", save_path=None):

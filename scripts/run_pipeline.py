@@ -35,6 +35,13 @@ from src.visualization.plots import (
     plot_shuffle_robustness,
     plot_precision_recall_f1,
     plot_results_table,
+    # ── new combined plots ──────────────────────────────────────────
+    plot_accuracy_f1_combined,
+    plot_precision_recall_f1_combined,
+    plot_all_confusion_matrices,
+    plot_feature_importance_combined,
+    plot_data_regime_combined,
+    plot_robustness_combined,
 )
 from src.evaluation.domain_shift import evaluate_domain_shift
 from src.evaluation.robustness import PerturbationTesting
@@ -85,6 +92,8 @@ def run_pipeline_all_models(config, train_df, test_in_df, test_out_df, figs_dir)
     trained_models = {}
     preds_in_all = {}
     preds_out_all = {}
+    # Collect feature-importance data for a combined plot at the end
+    _feat_importance_pairs = []
 
     # ── STATISTICAL MODELS ──────────────────────────────────────────────────
 
@@ -108,10 +117,7 @@ def run_pipeline_all_models(config, train_df, test_in_df, test_out_df, figs_dir)
     _save_model_checkpoint(tfidf_lr, "TFIDF_LR", config['paths']['models_dir'])
 
     features, coefs = tfidf_lr.get_feature_importance()
-    plot_feature_importance(
-        features, coefs,
-        title="TF-IDF + LR – Top Feature Coefficients",
-        save_path=os.path.join(figs_dir, 'tfidf_lr_feature_importance.png'))
+    _feat_importance_pairs.append(("TF-IDF + LR – Top Features", features, coefs))
 
     logger.info("--- Training Statistical Model 2: N-Grams + SVM ---")
     ngram_svm = NGramSVM(
@@ -133,10 +139,7 @@ def run_pipeline_all_models(config, train_df, test_in_df, test_out_df, figs_dir)
     _save_model_checkpoint(ngram_svm, "NGram_SVM", config['paths']['models_dir'])
 
     ng_features, ng_coefs = ngram_svm.get_feature_importance()
-    plot_feature_importance(
-        ng_features, ng_coefs,
-        title="N-Gram + SVM – Top Feature Coefficients",
-        save_path=os.path.join(figs_dir, 'ngram_svm_feature_importance.png'))
+    _feat_importance_pairs.append(("N-Gram + SVM – Top Features", ng_features, ng_coefs))
 
     logger.info("--- Training Statistical Model 3: GloVe + LR ---")
     glove_lr = GloVeLR(glove_path=None, random_state=config['seed'])
@@ -219,7 +222,8 @@ def run_pipeline_all_models(config, train_df, test_in_df, test_out_df, figs_dir)
     _save_model_checkpoint(distilbert_model, "DistilBERT",
                            config['paths']['models_dir'])
 
-    return all_shift_results, trained_models, preds_in_all, preds_out_all
+    return all_shift_results, trained_models, preds_in_all, preds_out_all, \
+           _feat_importance_pairs
 
 
 def main():
@@ -253,23 +257,27 @@ def main():
         save_path=os.path.join(figs_dir, 'label_distribution.png'))
 
     # ── Phase 2-5: Train all models ─────────────────────────────────────────
-    domain_shift_results, models, preds_in_all, preds_out_all = (
-        run_pipeline_all_models(config, train_df, test_in_df, test_out_df, figs_dir)
-    )
+    (domain_shift_results, models, preds_in_all, preds_out_all,
+     feat_importance_pairs) = run_pipeline_all_models(
+        config, train_df, test_in_df, test_out_df, figs_dir)
 
-    # ── Confusion matrices (per model × per domain) ──────────────────────────
-    logger.info("--- Generating confusion matrices for all models ---")
+    # ── Confusion matrices: combined grid + per-model individual files ────────
+    logger.info("--- Generating confusion matrices ---")
     y_in_true  = test_in_df['label'].tolist()
     y_out_true = test_out_df['label'].tolist()
 
+    # NEW: one grid with all models × both domains
+    plot_all_confusion_matrices(
+        y_in_true, y_out_true, preds_in_all, preds_out_all,
+        save_path=os.path.join(figs_dir, 'all_confusion_matrices.png'))
+
+    # Keep individual files for backward compatibility
     for name in models:
-        # In-domain
         plot_confusion_matrix(
             y_in_true, preds_in_all[name],
             model_name=name, domain="In-Domain (Amazon)",
             save_path=os.path.join(figs_dir,
                                    f'{name}_confusion_matrix_in_domain.png'))
-        # Out-of-domain
         plot_confusion_matrix(
             y_out_true, preds_out_all[name],
             model_name=name, domain="Out-of-Domain (IMDb)",
@@ -309,13 +317,25 @@ def main():
     df_out_metrics.to_csv(os.path.join(results_dir, 'out_domain_metrics.csv'),
                           index=False)
 
-    # ── ALL COMPARISON PLOTS ─────────────────────────────────────────────────
+    # ── COMPARISON PLOTS ─────────────────────────────────────────────────────
     logger.info("--- Generating comprehensive comparison plots ---")
 
-    plot_metrics_bar(df_shift, metric="accuracy",
-                     save_path=os.path.join(figs_dir, 'accuracy_comparison.png'))
-    plot_metrics_bar(df_shift, metric="f1",
-                     save_path=os.path.join(figs_dir, 'f1_comparison.png'))
+    # NEW: accuracy + F1 combined in one figure
+    plot_accuracy_f1_combined(
+        df_shift,
+        save_path=os.path.join(figs_dir, 'accuracy_f1_combined.png'))
+
+    # NEW: P/R/F1 for both domains in one figure
+    plot_precision_recall_f1_combined(
+        df_shift,
+        save_path=os.path.join(figs_dir, 'precision_recall_f1_combined.png'))
+
+    # NEW: combined feature importance (both statistical models side-by-side)
+    if feat_importance_pairs:
+        plot_feature_importance_combined(
+            feat_importance_pairs,
+            save_path=os.path.join(figs_dir, 'feature_importance_combined.png'))
+
     plot_domain_shift_drop_heatmap(
         df_shift,
         save_path=os.path.join(figs_dir, 'domain_shift_drop_heatmap.png'))
@@ -342,24 +362,6 @@ def main():
         plot_timing_comparison(
             df_timing,
             save_path=os.path.join(figs_dir, 'timing_comparison.png'))
-
-    if "in_domain_precision" in df_shift.columns:
-        _in = df_shift[["model", "in_domain_precision",
-                         "in_domain_recall", "in_domain_f1"]].rename(
-            columns={"in_domain_precision": "precision_macro",
-                     "in_domain_recall": "recall_macro",
-                     "in_domain_f1": "f1_macro"})
-        plot_precision_recall_f1(
-            _in, domain="In-Domain",
-            save_path=os.path.join(figs_dir, 'precision_recall_f1_in_domain.png'))
-        _out = df_shift[["model", "out_domain_precision",
-                          "out_domain_recall", "out_domain_f1"]].rename(
-            columns={"out_domain_precision": "precision_macro",
-                     "out_domain_recall": "recall_macro",
-                     "out_domain_f1": "f1_macro"})
-        plot_precision_recall_f1(
-            _out, domain="Out-of-Domain",
-            save_path=os.path.join(figs_dir, 'precision_recall_f1_out_domain.png'))
 
     # ── Phase 6: Robustness ──────────────────────────────────────────────────
     logger.info("--- Phase 6: Robustness Testing ---")
@@ -428,28 +430,20 @@ def main():
     # ── Robustness & data-regime plots ───────────────────────────────────────
     logger.info("--- Generating robustness and data-regime plots ---")
 
-    plot_degradation(df_rob,
-                     save_path=os.path.join(figs_dir, 'robustness_degradation_f1.png'))
-    plot_robustness_accuracy(
-        df_rob,
-        save_path=os.path.join(figs_dir, 'robustness_accuracy.png'))
-    plot_robustness_summary(
-        df_rob,
-        save_path=os.path.join(figs_dir, 'robustness_summary_panel.png'))
-    plot_shuffle_robustness(
-        df_shuf,
-        save_path=os.path.join(figs_dir, 'shuffle_robustness.png'))
+    # NEW: single combined robustness figure (noise accuracy + noise F1 + shuffle)
+    plot_robustness_combined(
+        df_rob, df_shuf,
+        save_path=os.path.join(figs_dir, 'robustness_combined.png'))
+
     plot_results_table(
         df_rob, title="Robustness Under Noise – All Models",
         save_path=os.path.join(figs_dir, 'robustness_table.png'))
 
     if data_regime_results:
-        plot_degradation(
+        # NEW: single combined data-regime figure (accuracy + F1 side-by-side)
+        plot_data_regime_combined(
             df_regime,
-            save_path=os.path.join(figs_dir, 'data_regime_scaling_f1.png'))
-        plot_data_regime_accuracy(
-            df_regime,
-            save_path=os.path.join(figs_dir, 'data_regime_accuracy.png'))
+            save_path=os.path.join(figs_dir, 'data_regime_combined.png'))
         plot_results_table(
             df_regime, title="Data Regime Performance – All Models",
             save_path=os.path.join(figs_dir, 'data_regime_table.png'))
