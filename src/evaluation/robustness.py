@@ -1,5 +1,6 @@
 import random
 import copy
+import hashlib
 
 class PerturbationTesting:
     """
@@ -7,15 +8,20 @@ class PerturbationTesting:
     """
     def __init__(self, seed=42):
         self.seed = seed
+
+    def _stable_text_seed(self, text: str) -> int:
+        """Build a deterministic per-text seed for reproducible perturbations."""
+        digest = hashlib.sha256(str(text).encode("utf-8")).hexdigest()
+        return (self.seed + int(digest[:16], 16)) % (2**32)
         
     def shuffle_word_order(self, text: str) -> str:
-        random.seed(self.seed + hash(text) % 10000) # Deterministic perturbation
+        random.seed(self._stable_text_seed(text))  # Deterministic perturbation
         words = text.split()
         random.shuffle(words)
         return " ".join(words)
         
     def inject_noise(self, text: str, noise_prob=0.1) -> str:
-        random.seed(self.seed + hash(text) % 10000)
+        random.seed(self._stable_text_seed(text))
         words = list(text)
         for i in range(len(words)):
             if words[i].isalpha() and random.random() < noise_prob:
@@ -30,3 +36,10 @@ class PerturbationTesting:
         elif perturbation_type == "shuffle":
             df_perturbed['text'] = df_perturbed['text'].apply(self.shuffle_word_order)
         return df_perturbed
+
+    def scale_data_regime(self, df, fraction=1.0):
+        fraction = max(0.0, min(float(fraction), 1.0))
+        if fraction == 1.0:
+            return df.copy()
+        sample_size = max(1, int(len(df) * fraction))
+        return df.sample(n=sample_size, random_state=self.seed).reset_index(drop=True)

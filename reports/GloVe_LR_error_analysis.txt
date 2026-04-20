@@ -1,0 +1,20 @@
+Error Analysis for GloVe_LR
+========================================
+
+False Positives (Predicted Positive, Actually Negative):
+
+False Negatives (Predicted Negative, Actually Positive):
+- film exceeded every expectation genuine fivestar movie
+- excellent movie great pacing ending satisfying really exceeded expectations
+- exceptional storytelling breathtaking visuals loved every moment works advertised
+- great writing outstanding performances thoroughly enjoyed works advertised
+- beautiful powerful movie left speechless end really exceeded expectations
+- moving thoughtprovoking movie stay forever exactly described
+- riveting start finish best film year
+- watched three times loved time wonderful
+- film exceeded every expectation genuine fivestar movie shipping fast
+- beautiful powerful movie left speechless end
+
+Error Taxonomy Counts:
+- domain_specific_words: 53
+- other: 47

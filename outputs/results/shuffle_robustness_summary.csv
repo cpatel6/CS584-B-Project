@@ -1,0 +1,7 @@
+model,baseline_accuracy,shuffled_accuracy
+TFIDF_LR,1.0,1.0
+NGram_SVM,1.0,1.0
+GloVe_LR,0.52,0.52
+CNNText_GloVe,1.0,0.92
+BiLSTM_GloVe,0.52,0.52
+DistilBERT,1.0,0.95

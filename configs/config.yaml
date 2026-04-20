@@ -6,26 +6,28 @@ data:
   out_of_domain: "imdb"        # using HF datasets for IMDb Reviews
   text_column: "text"
   label_column: "label"
-  max_seq_length: 256
-  train_samples: 12000 # 12,000 for training/validation
-  test_samples: 3000   # 3,000 for internal in-domain testing
-  ood_samples: 15000   # 15,000 for out-of-domain evaluation (IMDb)
+  max_seq_length: 64           # reduced from 256 – saves memory for neural models
+  train_samples: 500           # reduced from 1000 – faster training on laptop
+  test_samples: 100            # reduced from 300
+  ood_samples: 200             # reduced from 500
   val_split: 0.1
 
 preprocessing:
   lowercase: true
   remove_punctuation: true
   remove_stopwords: true
-  max_features_tfidf: 10000
+  max_features_tfidf: 5000     # reduced from 10000 – cuts TF-IDF matrix memory in half
   ngram_range: [1, 2]
 
 training:
-  batch_size: 32
+  batch_size: 16               # reduced from 32 – lower peak RAM during neural training
   learning_rate_nn: 1e-3
   learning_rate_tf: 2e-5
-  epochs: 5
+  epochs: 1                    # reduced from 2 – single pass is enough for a demo run
   early_stopping_patience: 2
-  device: "cuda"
+  device: "cpu"
+  save_checkpoints: false      # set true to persist model .pkl files (uses ~50–200 MB)
+  vocab_size_nn: 5000          # vocabulary size for CNN/BiLSTM; reduced from 10000
 
 models:
   statistical:
@@ -38,8 +40,8 @@ models:
     - "distilbert"
 
 robustness:
-  noise_levels: [0.05, 0.1, 0.15]
-  data_regimes: [0.01, 0.05, 0.1, 1.0]
+  noise_levels: [0.05, 0.15]   # reduced from 3 to 2 levels
+  data_regimes: [0.1, 1.0]     # reduced from 4 to 2 fractions
 
 paths:
   data_dir: "data"

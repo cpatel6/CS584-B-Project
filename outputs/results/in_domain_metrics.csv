@@ -1,0 +1,7 @@
+model,accuracy,precision,recall,f1
+TFIDF_LR,1.0,1.0,1.0,1.0
+NGram_SVM,1.0,1.0,1.0,1.0
+GloVe_LR,0.52,0.26,0.5,0.34210526315789475
+CNNText_GloVe,1.0,1.0,1.0,1.0
+BiLSTM_GloVe,0.52,0.26,0.5,0.34210526315789475
+DistilBERT,1.0,1.0,1.0,1.0

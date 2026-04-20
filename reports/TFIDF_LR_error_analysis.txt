@@ -1,0 +1,21 @@
+Error Analysis for TFIDF_LR
+========================================
+
+False Positives (Predicted Positive, Actually Negative):
+- wasted potential great concept ruined poor execution
+
+False Negatives (Predicted Negative, Actually Positive):
+- beautiful powerful movie left speechless end
+- movie touched heart genuinely emotional experience
+- incredible cinematic experience story deeply moving
+- one greatest films ever made completely blown away would buy
+- movie touched heart genuinely emotional experience
+- one greatest films ever made completely blown away exactly described
+- superb direction powerful script movie deserves awards
+- movie touched heart genuinely emotional experience
+- incredibly wellmade movie compelling original story
+- incredible cinematic experience story deeply moving
+
+Error Taxonomy Counts:
+- domain_specific_words: 10
+- other: 7

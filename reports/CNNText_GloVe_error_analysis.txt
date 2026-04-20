@@ -1,0 +1,20 @@
+Error Analysis for CNNText_GloVe
+========================================
+
+False Positives (Predicted Positive, Actually Negative):
+
+False Negatives (Predicted Negative, Actually Positive):
+- great writing outstanding performances thoroughly enjoyed works advertised
+- moving thoughtprovoking movie stay forever exactly described
+- riveting start finish best film year
+- beautiful powerful movie left speechless end
+- beautiful powerful movie left speechless end works advertised
+- true work art cinematography soundtrack perfect great product great service
+- movie touched heart genuinely emotional experience
+- great writing outstanding performances thoroughly enjoyed
+- incredible cinematic experience story deeply moving
+- fantastic watch characters rich plot gripping
+
+Error Taxonomy Counts:
+- domain_specific_words: 36
+- other: 29

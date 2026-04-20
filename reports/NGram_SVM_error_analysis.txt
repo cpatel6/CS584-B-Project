@@ -1,0 +1,22 @@
+Error Analysis for NGram_SVM
+========================================
+
+False Positives (Predicted Positive, Actually Negative):
+- overcomplicated dull cgi looked outdated acting weak
+- dull uninspired painfully slow wanted leave theater disappointing overall
+- dull uninspired painfully slow wanted leave theater
+- wasted potential great concept ruined poor execution
+- actors looked bored director vision whatsoever
+- dull uninspired painfully slow wanted leave theater disappointing overall
+- actors looked bored director vision whatsoever
+- actors looked bored director vision whatsoever disappointing overall
+- actors looked bored director vision whatsoever
+- actors looked bored director vision whatsoever
+
+False Negatives (Predicted Negative, Actually Positive):
+- one greatest films ever made completely blown away would buy
+- one greatest films ever made completely blown away exactly described
+- one greatest films ever made completely blown away
+
+Error Taxonomy Counts:
+- other: 16

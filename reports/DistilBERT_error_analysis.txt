@@ -1,0 +1,31 @@
+Error Analysis for DistilBERT
+========================================
+
+False Positives (Predicted Positive, Actually Negative):
+- extremely boring poorly acted regret watching film
+- story boring predictable fell asleep halfway disappointing overall
+- special effects cheap story completely incoherent defective right away
+- story boring predictable fell asleep halfway defective right away
+- story boring predictable fell asleep halfway
+- special effects cheap story completely incoherent terrible experience
+- overcomplicated dull cgi looked outdated acting weak
+- extremely boring poorly acted regret watching film nothing worked correctly
+- dull uninspired painfully slow wanted leave theater disappointing overall
+- dull uninspired painfully slow wanted leave theater
+
+False Negatives (Predicted Negative, Actually Positive):
+- riveting start finish best film year
+- true work art cinematography soundtrack perfect great product great service
+- true work art cinematography soundtrack perfect works great day one
+- riveting start finish best film year
+- movie touched heart genuinely emotional experience would buy
+- movie touched heart genuinely emotional experience happy result
+- movie touched heart genuinely emotional experience exactly described
+- incredible cinematic experience story deeply moving great product great service
+- riveting start finish best film year
+- loved characters narrative amazing viewing experience
+
+Error Taxonomy Counts:
+- other: 46
+- domain_specific_words: 24
+- negation: 5

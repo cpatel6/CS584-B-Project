@@ -1,0 +1,76 @@
+text,true_label,pred_label,category
+extremely boring poorly acted regret watching film,0,1,domain_specific_words
+story boring predictable fell asleep halfway disappointing overall,0,1,other
+special effects cheap story completely incoherent defective right away,0,1,other
+story boring predictable fell asleep halfway defective right away,0,1,other
+story boring predictable fell asleep halfway,0,1,other
+special effects cheap story completely incoherent terrible experience,0,1,other
+riveting start finish best film year,1,0,domain_specific_words
+overcomplicated dull cgi looked outdated acting weak,0,1,other
+extremely boring poorly acted regret watching film nothing worked correctly,0,1,domain_specific_words
+true work art cinematography soundtrack perfect great product great service,1,0,other
+dull uninspired painfully slow wanted leave theater disappointing overall,0,1,other
+dull uninspired painfully slow wanted leave theater,0,1,other
+disappointing film none characters likable never buying brand,0,1,negation
+story boring predictable fell asleep halfway,0,1,other
+painfully unfunny unengaging complete disappointment throughout,0,1,other
+wasted potential great concept ruined poor execution,0,1,other
+poor direction awful dialogue cannot recommend anyone,0,1,other
+actors looked bored director vision whatsoever,0,1,other
+true work art cinematography soundtrack perfect works great day one,1,0,other
+painfully unfunny unengaging complete disappointment throughout,0,1,other
+cannot understand positive reviews film genuinely terrible,0,1,domain_specific_words
+terrible writing plot many holes enjoy movie,0,1,domain_specific_words
+terrible movie plot made sense acting wooden,0,1,domain_specific_words
+story boring predictable fell asleep halfway never buying brand,0,1,negation
+terrible writing plot many holes enjoy movie,0,1,domain_specific_words
+special effects cheap story completely incoherent,0,1,other
+poor direction awful dialogue cannot recommend anyone,0,1,other
+story boring predictable fell asleep halfway,0,1,other
+dull uninspired painfully slow wanted leave theater disappointing overall,0,1,other
+actors looked bored director vision whatsoever,0,1,other
+painfully unfunny unengaging complete disappointment throughout,0,1,other
+poor direction awful dialogue cannot recommend anyone,0,1,other
+disappointing film none characters likable,0,1,domain_specific_words
+riveting start finish best film year,1,0,domain_specific_words
+actors looked bored director vision whatsoever disappointing overall,0,1,other
+painfully unfunny unengaging complete disappointment throughout,0,1,other
+movie touched heart genuinely emotional experience would buy,1,0,domain_specific_words
+poor direction awful dialogue cannot recommend anyone,0,1,other
+poor direction awful dialogue cannot recommend anyone,0,1,other
+possibly worst film released decade completely unwatchable,0,1,domain_specific_words
+special effects cheap story completely incoherent nothing worked correctly,0,1,other
+terrible writing plot many holes enjoy movie,0,1,domain_specific_words
+movie touched heart genuinely emotional experience happy result,1,0,domain_specific_words
+disappointing film none characters likable never buying brand,0,1,negation
+painfully unfunny unengaging complete disappointment throughout,0,1,other
+terrible writing plot many holes enjoy movie,0,1,domain_specific_words
+actors looked bored director vision whatsoever,0,1,other
+movie touched heart genuinely emotional experience exactly described,1,0,domain_specific_words
+poor direction awful dialogue cannot recommend anyone,0,1,other
+painfully unfunny unengaging complete disappointment throughout,0,1,other
+actors looked bored director vision whatsoever,0,1,other
+disappointing film none characters likable felt cheaply made,0,1,domain_specific_words
+extremely boring poorly acted regret watching film,0,1,domain_specific_words
+incredible cinematic experience story deeply moving great product great service,1,0,other
+extremely boring poorly acted regret watching film,0,1,domain_specific_words
+story boring predictable fell asleep halfway,0,1,other
+riveting start finish best film year,1,0,domain_specific_words
+story boring predictable fell asleep halfway poor value,0,1,other
+loved characters narrative amazing viewing experience,1,0,other
+overcomplicated dull cgi looked outdated acting weak,0,1,other
+true work art cinematography soundtrack perfect would buy,1,0,other
+incredibly wellmade movie compelling original story would buy,1,0,domain_specific_words
+disappointing film none characters likable never buying brand,0,1,negation
+poor direction awful dialogue cannot recommend anyone would recommend,0,1,other
+true work art cinematography soundtrack perfect works great day one,1,0,other
+actors looked bored director vision whatsoever,0,1,other
+story boring predictable fell asleep halfway never buying brand,0,1,negation
+loved characters narrative amazing viewing experience,1,0,other
+disappointing film none characters likable felt cheaply made,0,1,domain_specific_words
+painfully unfunny unengaging complete disappointment throughout,0,1,other
+possibly worst film released decade completely unwatchable,0,1,domain_specific_words
+terrible writing plot many holes enjoy movie,0,1,domain_specific_words
+dull uninspired painfully slow wanted leave theater,0,1,other
+disappointing film none characters likable defective right away,0,1,domain_specific_words
+one greatest films ever made completely blown away really exceeded expectations,1,0,other
